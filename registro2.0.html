@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Datos del Cliente</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+
+        form {
+            max-width: 500px;
+            margin: auto;            
+        }
+        label {
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #000000;
+        }
+        button {
+            background-color: #3226b3;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #3226b3;
+            cursor: pointer;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: #000000; /* Color de texto */
+        }
+
+        h2 {
+            font-size: 36px; /* Tamaño del título */
+            text-align: center;
+            margin-top: 50px; /* Margen superior */
+        }
+
+        .metodo-pago {
+            display: none; /* Oculta por defecto */
+        }
+
+        #resultadoEfectivo {
+            margin-top: 10px; /* Espacio para el resultado */
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Registro de Datos del Cliente</h2>
+
+    <form id="clienteForm">
+        <label for="nombre">Nombre completo:</label>
+        <input type="text" id="nombre" name="nombre" required>
+    
+        <label for="ruc">RUC:</label>
+        <input type="text" id="ruc" name="ruc" required>
+    
+        <label for="direccion">Dirección:</label>
+        <input type="text" id="direccion" name="direccion" required>
+    
+        <label for="telefono">Teléfono:</label>
+        <input type="tel" id="telefono" name="telefono" required>
+    
+        <label for="correo">Correo electrónico:</label>
+        <input type="email" id="correo" name="correo" required>
+    
+        <label for="metodoPago">Método de pago:</label>
+        <select id="metodoPago" name="metodoPago" onchange="mostrarCampos()">
+            <option value="">Seleccione un método</option>
+            <option value="efectivo">Efectivo</option>
+            <option value="tarjeta">Tarjeta</option>
+            <option value="yape">Yape</option>
+            <option value="plin">Plin</option>
+        </select>
+
+        <div id="efectivo" class="metodo-pago">
+            <label for="monto">Monto a pagar:</label>
+            <input type="number" id="monto" required>
+            <label for="pagado">Con cuánto paga:</label>
+            <input type="number" id="pagado" required>
+            <h3 id="resultadoEfectivo"></h3>
+            <div style="margin-top: 10px;"> <!-- Contenedor para los botones -->
+                <button type="button" onclick="calcularVuelto()">Calcular Vuelto</button>
+                <button type="button" onclick="registrarDatos()" style="margin-left: 10px;">Registrar</button>
+            </div>
+        </div>
+
+        <div id="tarjeta" class="metodo-pago">
+            <label for="numeroTarjeta">Número de tarjeta:</label>
+            <input type="text" id="numeroTarjeta" required>
+            <label for="fechaExpiracion">Fecha de expiración:</label>
+            <input type="text" id="fechaExpiracion" placeholder="MM/AA" required>
+            <label for="cvv">CVV:</label>
+            <input type="text" id="cvv" required>
+            <button type="button" onclick="registrarDatos()">Registrar</button>
+        </div>
+
+        <div id="yape" class="metodo-pago">
+            <label for="codigoYape">Código Yape:</label>
+            <input type="text" id="codigoYape" value="<?php echo rand(10000000, 99999999); ?>" readonly>
+            <button type="button" onclick="registrarDatos()">Registrar</button>
+        </div>
+
+        <div id="plin" class="metodo-pago">
+            <label for="codigoPlin">Código Plin:</label>
+            <input type="text" id="codigoPlin" value="<?php echo rand(10000000, 99999999); ?>" readonly>
+            <button type="button" onclick="registrarDatos()">Registrar</button>
+        </div>
+    </form>
+    
+    <script>
+        function mostrarCampos() {
+            const metodo = document.getElementById("metodoPago").value;
+            const metodosPago = document.querySelectorAll('.metodo-pago');
+            metodosPago.forEach(div => div.style.display = 'none'); // Ocultar todos
+
+            if (metodo) {
+                document.getElementById(metodo).style.display = 'block'; // Mostrar el seleccionado
+            }
+        }
+
+        function calcularVuelto() {
+            const monto = parseFloat(document.getElementById("monto").value);
+            const pagado = parseFloat(document.getElementById("pagado").value);
+            const resultadoEfectivo = document.getElementById("resultadoEfectivo");
+
+            if (pagado >= monto) {
+                const vuelto = pagado - monto;
+                resultadoEfectivo.innerText = `Vuelto: S/. ${vuelto.toFixed(2)}`;
+            } else {
+                resultadoEfectivo.innerText = "El monto pagado es menor que el monto a pagar.";
+            }
+        }
+
+        function registrarDatos() {
+            const nombre = document.getElementById("nombre").value;
+            const ruc = document.getElementById("ruc").value;
+            const direccion = document.getElementById("direccion").value;
+            const telefono = document.getElementById("telefono").value;
+            const correo = document.getElementById("correo").value;
+
+            if (nombre && ruc && direccion && telefono && correo) {
+                alert("REGISTRADO EXITOSAMENTE"); // Muestra un mensaje de alerta
+                
+                document.getElementById("clienteForm").reset();
+                const metodosPago = document.querySelectorAll('.metodo-pago');
+                metodosPago.forEach(div => div.style.display = 'none'); // Ocultar todos de nuevo
+
+            } else {
+                alert("Por favor, complete todos los campos.");
+            }
+        }
+    </script>
+    
+</body>
+</html>
