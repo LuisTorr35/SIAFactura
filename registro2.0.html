@@ -53,6 +53,19 @@
         #resultadoEfectivo {
             margin-top: 10px; /* Espacio para el resultado */
         }
+
+        /* Estilo para separar los botones */
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        /* Estilo adicional para el botón de generar PDF */
+        .pdf-button-container {
+            margin-top: 30px; /* Margen superior adicional para el botón de generar PDF */
+            text-align: center; /* Centrar el botón si lo prefieres */
+        }
     </style>
 </head>
 <body>
@@ -90,9 +103,16 @@
             <label for="pagado">Con cuánto paga:</label>
             <input type="number" id="pagado" required>
             <h3 id="resultadoEfectivo"></h3>
-            <div style="margin-top: 10px;"> <!-- Contenedor para los botones -->
+
+            <!-- Contenedor para los botones de Calcular Vuelto y Registrar -->
+            <div class="button-container">
                 <button type="button" onclick="calcularVuelto()">Calcular Vuelto</button>
-                <button type="button" onclick="registrarDatos()" style="margin-left: 10px;">Registrar</button>
+                <button type="button" onclick="registrarDatos()">Registrar</button>
+            </div>
+
+            <!-- Contenedor para el botón de Generar PDF -->
+            <div class="pdf-button-container">
+                <button type="button" onclick="generarPDF()">Generar PDF</button>
             </div>
         </div>
 
@@ -103,19 +123,42 @@
             <input type="text" id="fechaExpiracion" placeholder="MM/AA" required>
             <label for="cvv">CVV:</label>
             <input type="text" id="cvv" required>
-            <button type="button" onclick="registrarDatos()">Registrar</button>
+
+            <!-- Contenedor para los botones de Registrar -->
+            <div class="button-container">
+                <button type="button" onclick="registrarDatos()">Registrar</button>
+            </div>
+
+            <!-- Contenedor para el botón de Generar PDF -->
+            <div class="pdf-button-container">
+                <button type="button" onclick="generarPDF()">Generar PDF</button>
+            </div>
         </div>
 
         <div id="yape" class="metodo-pago">
             <label for="codigoYape">Código Yape:</label>
             <input type="text" id="codigoYape" readonly>
-            <button type="button" onclick="registrarDatos()">Registrar</button>
+
+            <div class="button-container">
+                <button type="button" onclick="registrarDatos()">Registrar</button>
+            </div>
+
+            <div class="pdf-button-container">
+                <button type="button" onclick="generarPDF()">Generar PDF</button>
+            </div>
         </div>
 
         <div id="plin" class="metodo-pago">
             <label for="codigoPlin">Código Plin:</label>
             <input type="text" id="codigoPlin" readonly>
-            <button type="button" onclick="registrarDatos()">Registrar</button>
+
+            <div class="button-container">
+                <button type="button" onclick="registrarDatos()">Registrar</button>
+            </div>
+
+            <div class="pdf-button-container">
+                <button type="button" onclick="generarPDF()">Generar PDF</button>
+            </div>
         </div>
     </form>
     
@@ -178,6 +221,10 @@
             } else {
                 alert("Por favor, complete todos los campos.");
             }
+        }
+
+        function generarPDF() {
+            alert("Función de generar PDF no implementada todavía.");
         }
     </script>
     
