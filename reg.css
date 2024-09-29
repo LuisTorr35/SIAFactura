@@ -1,0 +1,98 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 20px;
+    background-color: #f0f0f0;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    max-width: 1200px;
+    margin: auto;
+}
+
+.terminos {
+    flex: 1;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 350px;
+    height: fit-content;
+}
+
+.terminos h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.terminos ul {
+    list-style-type: disc;
+    padding-left: 20px;
+}
+
+.terminos li {
+    margin-bottom: 10px;
+}
+
+.formulario {
+    flex: 2;
+    padding: 20px;
+    background-color: #ffffff;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+label {
+    font-weight: bold;
+}
+
+input, select {
+    width: 100%;
+    padding: 8px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #000;
+    width: 97%;
+}
+
+button {
+    background-color: #3226b3;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #3226b3;
+    cursor: pointer;
+    width: 20%;
+}
+
+.metodo-pago {
+    display: none;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    gap: 20px;
+}
+
+.pdf-button-container {
+    margin-top: 30px;
+    text-align: center;
+}

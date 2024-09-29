@@ -3,230 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Registro de Datos del Cliente</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
-            padding: 20px;
-            background-color: #ffffff;
-        }
+    <title>Completar Compra</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
 
-        form {
-            max-width: 500px;
-            margin: auto;            
-        }
-        label {
-            font-weight: bold;
-        }
-        input, select {
-            width: 100%;
-            padding: 8px;
-            margin: 10px 0;
-            border-radius: 5px;
-            border: 1px solid #000000;
-        }
-        button {
-            background-color: #3226b3;
-            color: white;
-            padding: 10px;
-            border-radius: 5px;
-            border: 1px solid #3226b3;
-            cursor: pointer;
-        }
-
-        body {
-            font-family: 'Montserrat', sans-serif;
-            color: #000000; /* Color de texto */
-        }
-
-        h2 {
-            font-size: 36px; /* Tamaño del título */
-            text-align: center;
-            margin-top: 50px; /* Margen superior */
-        }
-
-        .metodo-pago {
-            display: none; /* Oculta por defecto */
-        }
-
-        #resultadoEfectivo {
-            margin-top: 10px; /* Espacio para el resultado */
-        }
-
-        /* Estilo para separar los botones */
-        .button-container {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
-        }
-
-        /* Estilo adicional para el botón de generar PDF */
-        .pdf-button-container {
-            margin-top: 30px; /* Margen superior adicional para el botón de generar PDF */
-            text-align: center; /* Centrar el botón si lo prefieres */
-        }
-    </style>
+    <link rel="stylesheet" href="reg.css">
 </head>
 <body>
 
-    <h2>Registro de Datos del Cliente</h2>
-
-    <form id="clienteForm">
-        <label for="nombre">Nombre completo:</label>
-        <input type="text" id="nombre" name="nombre" required>
-    
-        <label for="ruc">RUC:</label>
-        <input type="text" id="ruc" name="ruc" required>
-    
-        <label for="direccion">Dirección:</label>
-        <input type="text" id="direccion" name="direccion" required>
-    
-        <label for="telefono">Teléfono:</label>
-        <input type="tel" id="telefono" name="telefono" required>
-    
-        <label for="correo">Correo electrónico:</label>
-        <input type="email" id="correo" name="correo" required>
-    
-        <label for="metodoPago">Método de pago:</label>
-        <select id="metodoPago" name="metodoPago" onchange="mostrarCampos()">
-            <option value="">Seleccione un método</option>
-            <option value="efectivo">Efectivo</option>
-            <option value="tarjeta">Tarjeta</option>
-            <option value="yape">Yape</option>
-            <option value="plin">Plin</option>
-        </select>
-
-        <div id="efectivo" class="metodo-pago">
-            <label for="monto">Monto a pagar:</label>
-            <input type="number" id="monto" required>
-            <label for="pagado">Con cuánto paga:</label>
-            <input type="number" id="pagado" required>
-            <h3 id="resultadoEfectivo"></h3>
-
-            <!-- Contenedor para los botones de Calcular Vuelto y Registrar -->
-            <div class="button-container">
-                <button type="button" onclick="calcularVuelto()">Calcular Vuelto</button>
-                <button type="button" onclick="registrarDatos()">Registrar</button>
-            </div>
-
-            <!-- Contenedor para el botón de Generar PDF -->
-            <div class="pdf-button-container">
-                <button type="button" onclick="generarPDF()">Generar PDF</button>
-            </div>
+    <div class="container">
+        <!-- Términos y Condiciones -->
+        <div class="terminos">
+            <h3>Términos y Condiciones</h3>
+            <p>
+                Al utilizar nuestros servicios, usted acepta los siguientes términos y condiciones:
+            </p>
+            <ul>
+                <li>Los datos proporcionados serán utilizados únicamente para procesar su registro y compra.</li>
+                <li>No compartiremos su información con terceros sin su consentimiento.</li>
+                <li>Es responsabilidad del cliente proporcionar información veraz y actualizada.</li>
+                <li>Los métodos de pago seleccionados no pueden ser modificados una vez procesado el registro.</li>
+                <li>El cliente tiene derecho a solicitar la eliminación de sus datos personales en cualquier momento.</li>
+                <li>Al generar un PDF, usted confirma que ha revisado y aprobado toda la información ingresada.</li>
+                <li>Cualquier duda o reclamo puede ser dirigido a nuestro servicio de atención al cliente.</li>
+            </ul>
         </div>
 
-        <div id="tarjeta" class="metodo-pago">
-            <label for="numeroTarjeta">Número de tarjeta:</label>
-            <input type="text" id="numeroTarjeta" required>
-            <label for="fechaExpiracion">Fecha de expiración:</label>
-            <input type="text" id="fechaExpiracion" placeholder="MM/AA" required>
-            <label for="cvv">CVV:</label>
-            <input type="text" id="cvv" required>
+        <!-- Formulario de Registro -->
+        <div class="formulario">
+            <h2>Completar Compra</h2>
 
-            <!-- Contenedor para los botones de Registrar -->
-            <div class="button-container">
-                <button type="button" onclick="registrarDatos()">Registrar</button>
-            </div>
+            <form id="clienteForm">
+                <label for="nombre">Nombre completo:</label>
+                <input type="text" id="nombre" name="nombre" required>
 
-            <!-- Contenedor para el botón de Generar PDF -->
-            <div class="pdf-button-container">
-                <button type="button" onclick="generarPDF()">Generar PDF</button>
-            </div>
-        </div>
+                <label for="ruc">RUC:</label>
+                <input type="text" id="ruc" name="ruc" required>
 
-        <div id="yape" class="metodo-pago">
-            <label for="codigoYape">Código Yape:</label>
-            <input type="text" id="codigoYape" readonly>
+                <label for="direccion">Dirección:</label>
+                <input type="text" id="direccion" name="direccion" required>
 
-            <div class="button-container">
-                <button type="button" onclick="registrarDatos()">Registrar</button>
-            </div>
+                <label for="telefono">Teléfono:</label>
+                <input type="tel" id="telefono" name="telefono" required>
 
-            <div class="pdf-button-container">
-                <button type="button" onclick="generarPDF()">Generar PDF</button>
-            </div>
-        </div>
+                <label for="correo">Correo electrónico:</label>
+                <input type="email" id="correo" name="correo" required>
 
-        <div id="plin" class="metodo-pago">
-            <label for="codigoPlin">Código Plin:</label>
-            <input type="text" id="codigoPlin" readonly>
+                <label for="metodoPago">Método de pago:</label>
+                <select id="metodoPago" name="metodoPago" onchange="mostrarCampos()">
+                    <option value="">Seleccione un método</option>
+                    <option value="efectivo">Efectivo</option>
+                    <option value="tarjeta">Tarjeta</option>
+                    <option value="yape">Yape</option>
+                    <option value="plin">Plin</option>
+                </select>
 
-            <div class="button-container">
-                <button type="button" onclick="registrarDatos()">Registrar</button>
-            </div>
+                <div id="efectivo" class="metodo-pago">
+                    <label for="monto">Monto a pagar:</label>
+                    <input type="number" id="monto" required>
+                    <label for="pagado">Con cuánto paga:</label>
+                    <input type="number" id="pagado" required>
+                    <h3 id="resultadoEfectivo"></h3>
 
-            <div class="pdf-button-container">
-                <button type="button" onclick="generarPDF()">Generar PDF</button>
-            </div>
-        </div>
-    </form>
-    
-    <script>
-        function mostrarCampos() {
-            const metodo = document.getElementById("metodoPago").value;
-            const metodosPago = document.querySelectorAll('.metodo-pago');
-            metodosPago.forEach(div => div.style.display = 'none'); // Ocultar todos
+                    <div class="button-container">
+                        <button type="button" onclick="calcularVuelto()">Calcular Vuelto</button>
+                        <button type="button" onclick="registrarDatos()">Registrar</button>
+                    </div>
 
-            if (metodo) {
-                document.getElementById(metodo).style.display = 'block'; // Mostrar el seleccionado
-            }
-        }
+                    <div class="pdf-button-container">
+                        <button type="button" onclick="generarPDF()">Generar PDF</button>
+                    </div>
+                </div>
 
-        function calcularVuelto() {
-            const monto = parseFloat(document.getElementById("monto").value);
-            const pagado = parseFloat(document.getElementById("pagado").value);
-            const resultadoEfectivo = document.getElementById("resultadoEfectivo");
+                <div id="tarjeta" class="metodo-pago">
+                    <label for="numeroTarjeta">Número de tarjeta:</label>
+                    <input type="text" id="numeroTarjeta" required>
+                    <label for="fechaExpiracion">Fecha de expiración:</label>
+                    <input type="text" id="fechaExpiracion" placeholder="MM/AA" required>
+                    <label for="cvv">CVV:</label>
+                    <input type="text" id="cvv" required>
 
-            if (pagado >= monto) {
-                const vuelto = pagado - monto;
-                resultadoEfectivo.innerText = `Vuelto: S/. ${vuelto.toFixed(2)}`;
-            } else {
-                resultadoEfectivo.innerText = "El monto pagado es menor que el monto a pagar.";
-            }
-        }
+                    <div class="button-container">
+                        <button type="button" onclick="registrarDatos()">Registrar</button>
+                    </div>
 
-        document.getElementById('telefono').addEventListener('input', function() {
-        const telefono = document.getElementById('telefono').value;
+                    <div class="pdf-button-container">
+                        <button type="button" onclick="generarPDF()">Generar PDF</button>
+                    </div>
+                </div>
 
-        if (telefono.length === 9) {
-            const metodoSeleccionado = document.getElementById("metodoPago").value;
-
-            if (metodoSeleccionado === 'yape') {
-                document.getElementById('codigoYape').value = telefono;
-            } else if (metodoSeleccionado === 'plin') {
-                document.getElementById('codigoPlin').value = telefono;
-            }
-        } else {
-            document.getElementById('codigoYape').value = '';
-            document.getElementById('codigoPlin').value = '';
-        }
-        });
-
-        function registrarDatos() {
-            const nombre = document.getElementById("nombre").value;
-            const ruc = document.getElementById("ruc").value;
-            const direccion = document.getElementById("direccion").value;
-            const telefono = document.getElementById("telefono").value;
-            const correo = document.getElementById("correo").value;
-            const telefonoValido = telefono.length === 9 && !isNaN(telefono);
-
-            if (nombre && ruc && direccion && telefonoValido && correo) {
-                alert("REGISTRADO EXITOSAMENTE"); // Muestra un mensaje de alerta
+                <div id="yape" class="metodo-pago">
+                    <label for="codigoYape">Código Yape:</label>
+                    <input type="text" id="codigoYape" readonly>
+                    
+                    <!-- Campo para cargar archivo PNG -->
+                    <div id="campoYape" style="display: none;">
+                        <label for="archivoYape">Sube una Imagen del Pago:</label>
+                        <input type="file" id="archivoYape" accept=".png" onchange="validarArchivo(this)">
+                        <p id="resultadoArchivo"></p>
+                    </div>
                 
-                document.getElementById("clienteForm").reset();
-                const metodosPago = document.querySelectorAll('.metodo-pago');
-                metodosPago.forEach(div => div.style.display = 'none'); // Ocultar todos de nuevo
+                    <div class="button-container">
+                        <button type="button" onclick="pagar()">Pagar</button>
+                    </div>
+                </div>
+                
+                <div id="plin" class="metodo-pago">
+                    <label for="codigoPlin">Código Plin:</label>
+                    <input type="text" id="codigoPlin" readonly>
+                
+                    <!-- Campo para cargar archivo PNG -->
+                    <div id="campoPlin" style="display: none;">
+                        <label for="archivoPlin">Sube una Imagen del Pago:</label>
+                        <input type="file" id="archivoPlin" accept=".png" onchange="validarArchivo(this)">
+                        <p id="resultadoArchivo"></p>
+                    </div>
+                
+                    <div class="button-container">
+                        <button type="button" onclick="pagar()">Pagar</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
 
-            } else {
-                alert("Por favor, complete todos los campos.");
-            }
-        }
-
-        function generarPDF() {
-            alert("Función de generar PDF no implementada todavía.");
-        }
-    </script>
-    
+    <script src="reg.js"></script>
 </body>
 </html>
