@@ -110,16 +110,20 @@ function registrarDatos() {
         },
         body: JSON.stringify(data)
     })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error('Error en la respuesta de la red');
+    .then(response => response.text()) // Cambia a text() para inspeccionar la respuesta
+    .then(text => {
+        console.log("Respuesta del servidor:", text); // Muestra la respuesta en la consola
+        try {
+            const result = JSON.parse(text); // Intenta convertir a JSON
+            if (result.error) {
+                throw new Error(result.error); // Maneja el error si existe
+            }
+            alert("Factura registrada exitosamente. ID: " + result.id_factura);
+            generarPDF(result.cliente); // Pasa los datos del cliente para generar el PDF
+        } catch (e) {
+            console.error('Error de análisis JSON:', e);
+            alert('Error al procesar la respuesta del servidor: ' + e.message);
         }
-        return response.json(); // Cambia a .json() para obtener un objeto JSON
-    })
-    .then(result => {
-        console.log(result);
-        alert("Factura registrada exitosamente. ID: " + result.id_factura); // Muestra el ID de la factura
-        // Aquí puedes agregar más lógica para mostrar los datos del cliente y artículo si lo deseas
     })
     .catch(error => {
         console.error('Error:', error);
