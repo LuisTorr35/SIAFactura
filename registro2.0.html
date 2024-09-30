@@ -6,11 +6,9 @@
     <title>Completar Compra</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
-
     <link rel="stylesheet" href="reg.css">
 </head>
 <body>
-
     <div class="container">
         <!-- Términos y Condiciones -->
         <div class="terminos">
@@ -28,29 +26,28 @@
                 <li>Cualquier duda o reclamo puede ser dirigido a nuestro servicio de atención al cliente.</li>
             </ul>
         </div>
-
+        
         <!-- Formulario de Registro -->
         <div class="formulario">
             <h2>Completar Compra</h2>
-
-            <form id="clienteForm">
-                <label for="nombre">Nombre completo:</label>
-                <input type="text" id="nombre" name="nombre" required>
-
-                <label for="ruc">RUC:</label>
-                <input type="text" id="ruc" name="ruc" required>
-
-                <label for="direccion">Dirección:</label>
-                <input type="text" id="direccion" name="direccion" required>
-
-                <label for="telefono">Teléfono:</label>
-                <input type="tel" id="telefono" name="telefono" required>
-
-                <label for="correo">Correo electrónico:</label>
-                <input type="email" id="correo" name="correo" required>
-
+            <form id="clienteForm" action="registro_factura.php" method="POST">
+                <label for="ruc_cliente">RUC:</label>
+                <input type="text" id="ruc_cliente" name="ruc_cliente" required>
+                
+                <label for="id_articulo">ID del Producto:</label>
+                <input type="number" id="id_articulo" name="id_articulo" required onblur="buscarProducto()">
+                
+                <div id="detalleProducto" style="display: none;">
+                    <h4>Detalles del Producto:</h4>
+                    <p id="nombreProducto"></p>
+                    <p id="precioProducto"></p>
+                    <p id="unidadProducto"></p>
+                    <label for="cantidad">Cantidad:</label>
+                    <input type="number" id="cantidad" name="cantidad" required>
+                </div>
+                
                 <label for="metodoPago">Método de pago:</label>
-                <select id="metodoPago" name="metodoPago" onchange="mostrarCampos()">
+                <select id="metodoPago" name="forma_pago" onchange="mostrarCampos()" required>
                     <option value="">Seleccione un método</option>
                     <option value="efectivo">Efectivo</option>
                     <option value="tarjeta">Tarjeta</option>
@@ -58,67 +55,55 @@
                     <option value="plin">Plin</option>
                 </select>
 
-                <div id="efectivo" class="metodo-pago">
+                <!-- Campos para efectivo -->
+                <div id="efectivo" class="metodo-pago" style="display: none;">
                     <label for="monto">Monto a pagar:</label>
-                    <input type="number" id="monto" required>
+                    <input type="number" id="monto" name="monto" required>
                     <label for="pagado">Con cuánto paga:</label>
-                    <input type="number" id="pagado" required>
+                    <input type="number" id="pagado" name="pagado" required>
                     <h3 id="resultadoEfectivo"></h3>
-
+                    
                     <div class="button-container">
                         <button type="button" onclick="calcularVuelto()">Calcular Vuelto</button>
                         <button type="button" onclick="registrarDatos()">Registrar</button>
                     </div>
-
+                    
                     <div class="pdf-button-container">
                         <button type="button" onclick="generarPDF()">Generar PDF</button>
                     </div>
                 </div>
 
-                <div id="tarjeta" class="metodo-pago">
+                <!-- Campos para tarjeta -->
+                <div id="tarjeta" class="metodo-pago" style="display: none;">
                     <label for="numeroTarjeta">Número de tarjeta:</label>
-                    <input type="text" id="numeroTarjeta" required>
+                    <input type="text" id="numeroTarjeta" name="numeroTarjeta" required>
                     <label for="fechaExpiracion">Fecha de expiración:</label>
-                    <input type="text" id="fechaExpiracion" placeholder="MM/AA" required>
+                    <input type="text" id="fechaExpiracion" placeholder="MM/AA" required name="fechaExpiracion">
                     <label for="cvv">CVV:</label>
-                    <input type="text" id="cvv" required>
-
+                    <input type="text" id="cvv" name="cvv" required>
+                    
                     <div class="button-container">
                         <button type="button" onclick="registrarDatos()">Registrar</button>
                     </div>
-
+                    
                     <div class="pdf-button-container">
                         <button type="button" onclick="generarPDF()">Generar PDF</button>
                     </div>
                 </div>
 
-                <div id="yape" class="metodo-pago">
+                <!-- Campos para Yape -->
+                <div id="yape" class="metodo-pago" style="display: none;">
                     <label for="codigoYape">Código Yape:</label>
-                    <input type="text" id="codigoYape" readonly>
-                    
-                    <!-- Campo para cargar archivo PNG -->
-                    <div id="campoYape" style="display: none;">
-                        <label for="archivoYape">Sube una Imagen del Pago:</label>
-                        <input type="file" id="archivoYape" accept=".png" onchange="validarArchivo(this)">
-                        <p id="resultadoArchivo"></p>
-                    </div>
-                
+                    <input type="text" id="codigoYape" name="codigoYape" readonly>
                     <div class="button-container">
                         <button type="button" onclick="pagar()">Pagar</button>
                     </div>
                 </div>
-                
-                <div id="plin" class="metodo-pago">
+
+                <!-- Campos para Plin -->
+                <div id="plin" class="metodo-pago" style="display: none;">
                     <label for="codigoPlin">Código Plin:</label>
-                    <input type="text" id="codigoPlin" readonly>
-                
-                    <!-- Campo para cargar archivo PNG -->
-                    <div id="campoPlin" style="display: none;">
-                        <label for="archivoPlin">Sube una Imagen del Pago:</label>
-                        <input type="file" id="archivoPlin" accept=".png" onchange="validarArchivo(this)">
-                        <p id="resultadoArchivo"></p>
-                    </div>
-                
+                    <input type="text" id="codigoPlin" name="codigoPlin" readonly>
                     <div class="button-container">
                         <button type="button" onclick="pagar()">Pagar</button>
                     </div>

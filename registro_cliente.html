@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registro de Clientes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 20px;
+            background-color: #ffffff;
+        }
+
+        form {
+            max-width: 500px;
+            margin: auto;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #000000;
+        }
+
+        button {
+            background-color: #3226b3;
+            color: white;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #3226b3;
+            cursor: pointer;
+        }
+
+        h2 {
+            font-size: 36px;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Registro de Clientes</h2>
+
+    <form method="post" action="registro_cliente.php">
+        <label for="nombre">Nombre del cliente:</label>
+        <input type="text" id="nombre" name="nombre" required>
+    
+        <label for="ruc">RUC del cliente:</label>
+        <input type="number" id="ruc" name="ruc" required>
+    
+        <label for="direccion">Dirección del cliente:</label>
+        <input type="text" id="direccion" name="direccion" required>
+    
+        <div class="button-container">
+            <button type="submit">Registrar Cliente</button>
+        </div>
+    </form>
+
+</body>
+</html>

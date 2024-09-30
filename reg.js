@@ -6,24 +6,29 @@ function mostrarCampos() {
     const plinDiv = document.getElementById("plin");
 
     // Ocultar todos los métodos de pago
-    efectivoDiv.style.display = "none";
-    tarjetaDiv.style.display = "none";
-    yapeDiv.style.display = "none";
-    plinDiv.style.display = "none";
+    if (efectivoDiv) efectivoDiv.style.display = "none";
+    if (tarjetaDiv) tarjetaDiv.style.display = "none";
+    if (yapeDiv) yapeDiv.style.display = "none";
+    if (plinDiv) plinDiv.style.display = "none";
 
     // Mostrar el método seleccionado
     if (metodoSeleccionado === "efectivo") {
-        efectivoDiv.style.display = "block";
+        if (efectivoDiv) efectivoDiv.style.display = "block";
     } else if (metodoSeleccionado === "tarjeta") {
-        tarjetaDiv.style.display = "block";
+        if (tarjetaDiv) tarjetaDiv.style.display = "block";
     } else if (metodoSeleccionado === "yape") {
-        yapeDiv.style.display = "block";
-        document.getElementById("codigoYape").value = "123456789"; // Código Yape por defecto
+        if (yapeDiv) {
+            yapeDiv.style.display = "block";
+            document.getElementById("codigoYape").value = "123456789"; // Código Yape por defecto
+        }
     } else if (metodoSeleccionado === "plin") {
-        plinDiv.style.display = "block";
-        document.getElementById("codigoPlin").value = "987654321"; // Código Plin por defecto
+        if (plinDiv) {
+            plinDiv.style.display = "block";
+            document.getElementById("codigoPlin").value = "987654321"; // Código Plin por defecto
+        }
     }
 }
+
 
 document.getElementById('metodoPago').addEventListener('change', function () {
     const metodoSeleccionado = document.getElementById('metodoPago').value;
@@ -77,32 +82,81 @@ function pagar() {
     generarPDF();
 }
 
-
 function registrarDatos() {
-    alert("Datos registrados exitosamente.");
+    const ruc = document.getElementById("ruc_cliente").value;
+    const metodoPago = document.getElementById("metodoPago").value;
+    const idArticulo = document.getElementById("id_articulo").value;
+    const cantidad = document.getElementById("cantidad").value;
+    
+    // Validar entradas
+    if (!ruc || !metodoPago || !idArticulo || !cantidad) {
+        alert("Por favor, completa todos los campos.");
+        return;
+    }
+
+    // Crear un objeto para enviar con los datos
+    const data = {
+        ruc_cliente: ruc,
+        forma_pago: metodoPago,
+        id_articulo: idArticulo,
+        cantidad: cantidad
+    };
+
+    // Enviar los datos a PHP mediante fetch API
+    fetch('registro_factura.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error en la respuesta de la red');
+        }
+        return response.json(); // Cambia a .json() para obtener un objeto JSON
+    })
+    .then(result => {
+        console.log(result);
+        alert("Factura registrada exitosamente. ID: " + result.id_factura); // Muestra el ID de la factura
+        // Aquí puedes agregar más lógica para mostrar los datos del cliente y artículo si lo deseas
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
 
-function generarPDF() {
+function generarPDF(cliente) {
+    if (!cliente) {
+        console.error("No se recibió información del cliente.");
+        return;
+    }
+
     const { jsPDF } = window.jspdf;
     const doc = new jsPDF();
 
     // Datos del formulario
-    const nombre = document.getElementById("nombre").value;
-    const ruc = document.getElementById("ruc").value;
-    const direccion = document.getElementById("direccion").value;
-    const telefono = document.getElementById("telefono").value;
-    const correo = document.getElementById("correo").value;
-    const metodoPago = document.getElementById("metodoPago").value;
+    const rucElement = document.getElementById("ruc_cliente");
+    const metodoPagoElement = document.getElementById("metodoPago");
 
+    const ruc = rucElement.value;
+    const metodoPago = metodoPagoElement.value;
+
+    // Aquí obtén los códigos de pago según el método
     let codigoPago = "";
     if (metodoPago === "yape") {
-        codigoPago = document.getElementById("codigoYape").value;
+        const codigoYapeElement = document.getElementById("codigoYape");
+        codigoPago = codigoYapeElement ? codigoYapeElement.value : "";
     } else if (metodoPago === "plin") {
-        codigoPago = document.getElementById("codigoPlin").value;
+        const codigoPlinElement = document.getElementById("codigoPlin");
+        codigoPago = codigoPlinElement ? codigoPlinElement.value : "";
     }
 
-    const monto = document.getElementById("monto") ? document.getElementById("monto").value : '';
-    const pagado = document.getElementById("pagado") ? document.getElementById("pagado").value : '';
+    const montoElement = document.getElementById("monto");
+    const pagadoElement = document.getElementById("pagado");
+
+    const monto = montoElement ? parseFloat(montoElement.value) : 0;
+    const pagado = pagadoElement ? parseFloat(pagadoElement.value) : 0;
     const vuelto = pagado - monto;
 
     // Añadir el título y la cabecera
@@ -113,11 +167,11 @@ function generarPDF() {
     // Añadir los datos de la empresa
     doc.setFontSize(12);
     doc.setTextColor(0, 0, 0);
-    doc.text("Empresa XYZ S.A.C.", 20, 40);
-    doc.text("RUC: 20512345678", 20, 45);
-    doc.text("Dirección: Calle Ejemplo 123, Ciudad", 20, 50);
+    doc.text("Razón Social: Materiales de Construcción S.A.C.", 20, 40);
+    doc.text("RUC: 1234567890", 20, 45);
+    doc.text("Dirección: Av. Constructores 123, Lima", 20, 50);
     doc.text("Teléfono: +51 987654321", 20, 55);
-    doc.text("Correo: contacto@empresa.com", 20, 60);
+    doc.text("Correo: ContrucE@gmail.com", 20, 60);
 
     // Separador
     doc.setLineWidth(0.5);
@@ -128,11 +182,9 @@ function generarPDF() {
     doc.text("Datos del Cliente", 20, 75);
     
     doc.setFontSize(12);
-    doc.text(`Nombre: ${nombre}`, 20, 85);
-    doc.text(`RUC: ${ruc}`, 20, 90);
-    doc.text(`Dirección: ${direccion}`, 20, 95);
-    doc.text(`Teléfono: ${telefono}`, 20, 100);
-    doc.text(`Correo: ${correo}`, 20, 105);
+    doc.text(`RUC: ${cliente.ruc}`, 20, 90);
+    doc.text(`Nombre: ${cliente.nombre}`, 20, 95); // Agregar nombre
+    doc.text(`Dirección: ${cliente.direccion}`, 20, 100); // Agregar dirección
     doc.text(`Método de Pago: ${metodoPago}`, 20, 110);
     if (metodoPago === "yape" || metodoPago === "plin") {
         doc.text(`Código de pago: ${codigoPago}`, 20, 115);
@@ -151,7 +203,7 @@ function generarPDF() {
         startY: 140,
         head: [['Descripción', 'Monto (S/)', 'Pagado (S/)', 'Vuelto (S/)']],
         body: [
-            ['Pago de Artículos', monto, pagado, vuelto.toFixed(2)]
+            ['Pago de Artículos', monto.toFixed(2), pagado.toFixed(2), vuelto.toFixed(2)]
         ],
         theme: 'striped',
         headStyles: { fillColor: [0, 0, 128] },
@@ -166,3 +218,79 @@ function generarPDF() {
     doc.save('factura.pdf');
 }
 
+
+function buscarProducto() {
+    const idArticulo = document.getElementById("id_articulo").value;
+    
+    // Verificar que se ingresa un ID
+    if (idArticulo) {
+        fetch(`buscar_producto.php?id=${idArticulo}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data) {
+                    document.getElementById("nombreProducto").textContent = `Nombre: ${data.nombre}`;
+                    document.getElementById("precioProducto").textContent = `Precio: S/ ${data.precio}`;
+                    document.getElementById("unidadProducto").textContent = `Unidad: ${data.unidad}`;
+                    document.getElementById("detalleProducto").style.display = "block";
+                } else {
+                    alert("Producto no encontrado.");
+                    document.getElementById("detalleProducto").style.display = "none";
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+    } else {
+        document.getElementById("detalleProducto").style.display = "none";
+    }
+}
+function registrarDatos() {
+    const ruc = document.getElementById("ruc_cliente").value.trim(); // Trim para eliminar espacios
+    const metodoPago = document.getElementById("metodoPago").value;
+    const idArticulo = document.getElementById("id_articulo").value;
+    const cantidad = document.getElementById("cantidad").value;
+
+    // Validar entradas
+    if (!ruc || !metodoPago || !idArticulo || !cantidad) {
+        alert("Por favor, completa todos los campos.");
+        return;
+    }
+
+    const data = {
+        ruc_cliente: ruc,
+        forma_pago: metodoPago,
+        id_articulo: idArticulo,
+        cantidad: cantidad
+    };
+
+    fetch('registro_factura.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data)
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Error en la respuesta de la red');
+        }
+        return response.json();
+    })
+    .then(result => {
+        console.log(result);
+        alert("Factura registrada exitosamente. ID: " + result.id_factura);
+        return fetch(`obtener_cliente.php?ruc_cliente=${ruc}`); // Asegúrate de usar el nombre correcto del parámetro
+    })
+    .then(response => response.json())
+    .then(cliente => {
+        if (cliente.error) {
+            console.error(cliente.error);
+            alert("Error al recuperar los datos del cliente.");
+            return;
+        }
+        generarPDF(cliente); // Asegúrate de que se pase el cliente correctamente
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}

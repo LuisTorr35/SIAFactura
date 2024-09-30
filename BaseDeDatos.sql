@@ -46,10 +46,6 @@ CREATE TABLE IF NOT EXISTS `Empresa` (
 );
 
 ALTER TABLE `FacturaCabecera` ADD CONSTRAINT `FacturaCabecera_fk1` FOREIGN KEY (`ruc_empresa`) REFERENCES `Empresa`(`ruc`);
-
 ALTER TABLE `FacturaCabecera` ADD CONSTRAINT `FacturaCabecera_fk2` FOREIGN KEY (`ruc_cliente`) REFERENCES `Cliente`(`ruc`);
-
 ALTER TABLE `FacturaCabecera` ADD CONSTRAINT `FacturaCabecera_fk8` FOREIGN KEY (`id_detalle`) REFERENCES `FacturaDetalle`(`id`);
 ALTER TABLE `FacturaDetalle` ADD CONSTRAINT `FacturaDetalle_fk1` FOREIGN KEY (`id_articulo`) REFERENCES `Artículo`(`id`);
-
-
